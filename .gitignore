@@ -1,0 +1,24 @@
+/node_modules/
+/dist/
+*.vsix
+
+# 本机交接记录和编辑器配置
+/HANDOFF.md
+/.vscode/
+/.codex/
+*.code-workspace
+
+# 本机凭据、数据库和会话日志
+.env
+.env.*
+.npmrc
+*.key
+*.pem
+*.sqlite
+*.sqlite-*
+*.sqlite3
+*.sqlite3-*
+*.db
+*.db-*
+*.jsonl
+*.log

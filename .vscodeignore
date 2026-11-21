@@ -1,0 +1,5 @@
+# VSIX 只带安装所需的清单、说明和编译代码。
+**
+!package.json
+!README.md
+!dist/*.js

@@ -1,0 +1,237 @@
+{
+  "name": "codex-project-manager",
+  "displayName": "Codex Project Manager",
+  "description": "在 VS Code 的 Codex 侧栏按项目浏览、归类并继续本机对话。",
+  "publisher": "local-tools",
+  "version": "0.1.6",
+  "engines": {
+    "vscode": "^1.106.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "extensionKind": [
+    "ui"
+  ],
+  "main": "./dist/extension.js",
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "scripts": {
+    "compile": "tsc -p .",
+    "test": "npm run compile && node --test test/*.test.cjs",
+    "vscode:prepublish": "npm run compile",
+    "package": "vsce package --allow-missing-repository --skip-license"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@types/vscode": "1.106.0",
+    "@vscode/vsce": "^3.7.1",
+    "typescript": "5.9.3"
+  },
+  "contributes": {
+    "viewsContainers": {
+      "secondarySidebar": [
+        {
+          "id": "codexProjectManager",
+          "title": "会话项目",
+          "icon": "$(comment-discussion)",
+          "when": "codexProjectManager.separateView"
+        }
+      ]
+    },
+    "views": {
+      "codexSecondaryViewContainer": [
+        {
+          "id": "codexProjectManager.chats",
+          "name": "会话项目",
+          "icon": "$(comment-discussion)",
+          "when": "codexProjectManager.inCodex",
+          "visibility": "visible"
+        }
+      ],
+      "codexProjectManager": [
+        {
+          "id": "codexProjectManager.standaloneChats",
+          "name": "会话项目",
+          "icon": "$(comment-discussion)",
+          "when": "codexProjectManager.separateView"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "codexProjectManager.open",
+        "title": "打开会话项目",
+        "category": "Codex 项目"
+      },
+      {
+        "command": "codexProjectManager.refresh",
+        "title": "刷新会话",
+        "category": "Codex 项目",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "codexProjectManager.search",
+        "title": "搜索会话…",
+        "category": "Codex 项目",
+        "icon": "$(search)"
+      },
+      {
+        "command": "codexProjectManager.addProject",
+        "title": "添加项目…",
+        "category": "Codex 项目",
+        "icon": "$(add)"
+      },
+      {
+        "command": "codexProjectManager.hideArchived",
+        "title": "隐藏已归档对话",
+        "category": "Codex 项目",
+        "icon": "$(eye-closed)"
+      },
+      {
+        "command": "codexProjectManager.showArchived",
+        "title": "显示已归档对话",
+        "category": "Codex 项目",
+        "icon": "$(eye)"
+      },
+      {
+        "command": "codexProjectManager.addRoot",
+        "title": "添加关联目录…"
+      },
+      {
+        "command": "codexProjectManager.assign",
+        "title": "添加到项目…"
+      },
+      {
+        "command": "codexProjectManager.clearAssignment",
+        "title": "清除手动归类"
+      },
+      {
+        "command": "codexProjectManager.openThread",
+        "title": "在 Codex 侧栏打开"
+      },
+      {
+        "command": "codexProjectManager.openEditor",
+        "title": "在 Codex 编辑器打开"
+      },
+      {
+        "command": "codexProjectManager.resume",
+        "title": "在终端继续"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "codexProjectManager.search",
+          "when": "view == codexProjectManager.chats || view == codexProjectManager.standaloneChats",
+          "group": "navigation@1"
+        },
+        {
+          "command": "codexProjectManager.addProject",
+          "when": "view == codexProjectManager.chats || view == codexProjectManager.standaloneChats",
+          "group": "navigation@2"
+        },
+        {
+          "command": "codexProjectManager.refresh",
+          "when": "view == codexProjectManager.chats || view == codexProjectManager.standaloneChats",
+          "group": "navigation@3"
+        },
+        {
+          "command": "codexProjectManager.hideArchived",
+          "when": "(view == codexProjectManager.chats || view == codexProjectManager.standaloneChats) && !config.codexProjectManager.hideArchived",
+          "group": "navigation@4"
+        },
+        {
+          "command": "codexProjectManager.showArchived",
+          "when": "(view == codexProjectManager.chats || view == codexProjectManager.standaloneChats) && config.codexProjectManager.hideArchived",
+          "group": "navigation@4"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "codexProjectManager.addRoot",
+          "when": "viewItem == codexProjectManager.project",
+          "group": "1_project"
+        },
+        {
+          "command": "codexProjectManager.assign",
+          "when": "viewItem =~ /^codexProjectManager\\.thread/",
+          "group": "1_project@1"
+        },
+        {
+          "command": "codexProjectManager.clearAssignment",
+          "when": "viewItem == codexProjectManager.thread.assigned",
+          "group": "1_project@2"
+        },
+        {
+          "command": "codexProjectManager.openEditor",
+          "when": "viewItem =~ /^codexProjectManager\\.thread/ && codexProjectManager.hasCodex",
+          "group": "2_open@1"
+        },
+        {
+          "command": "codexProjectManager.resume",
+          "when": "viewItem =~ /^codexProjectManager\\.thread/",
+          "group": "2_open@2"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "codexProjectManager.addRoot",
+          "when": "false"
+        },
+        {
+          "command": "codexProjectManager.assign",
+          "when": "false"
+        },
+        {
+          "command": "codexProjectManager.clearAssignment",
+          "when": "false"
+        },
+        {
+          "command": "codexProjectManager.openThread",
+          "when": "false"
+        },
+        {
+          "command": "codexProjectManager.openEditor",
+          "when": "false"
+        },
+        {
+          "command": "codexProjectManager.resume",
+          "when": "false"
+        },
+        {
+          "command": "codexProjectManager.hideArchived",
+          "when": "!config.codexProjectManager.hideArchived"
+        },
+        {
+          "command": "codexProjectManager.showArchived",
+          "when": "config.codexProjectManager.hideArchived"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Codex Project Manager",
+      "properties": {
+        "codexProjectManager.executable": {
+          "type": "string",
+          "default": "",
+          "scope": "machine",
+          "description": "Codex 可执行文件的绝对路径。留空时自动查找本机的 Codex。"
+        },
+        "codexProjectManager.separateSidebar": {
+          "type": "boolean",
+          "default": false,
+          "scope": "window",
+          "description": "将会话项目显示在独立的右侧标签页。"
+        },
+        "codexProjectManager.hideArchived": {
+          "type": "boolean",
+          "default": false,
+          "scope": "application",
+          "description": "在会话项目和会话搜索中隐藏已归档的对话。"
+        }
+      }
+    }
+  }
+}
